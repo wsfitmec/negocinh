@@ -1,0 +1,125 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --fundo: #050305;
+  --rosa: #ff4fa3;
+  --rosa-neon: #ff2e93;
+  --rosa-claro: #ffacd5;
+  --texto: #fff0f7;
+}
+
+html, body { min-height: 100%; background: var(--fundo); }
+body {
+  min-height: 100vh;
+  color: var(--texto);
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+.tela {
+  display: none;
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 24px 18px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 18px;
+  overflow: hidden;
+}
+.tela.ativa { display: flex; animation: entradaTela .65s ease both; }
+@keyframes entradaTela { from { opacity: 0; } to { opacity: 1; } }
+
+#inicio, #tela-mensagem {
+  background: radial-gradient(ellipse at 50% 45%, rgba(255, 40, 140, .13), transparent 65%), var(--fundo);
+}
+.luz-fundo {
+  position: absolute; z-index: -1; width: 270px; height: 270px;
+  border-radius: 50%; background: var(--rosa); opacity: .13; filter: blur(100px);
+  animation: luzRespira 4s ease-in-out infinite alternate;
+}
+@keyframes luzRespira { from { transform: scale(.8); opacity: .08; } to { transform: scale(1.2); opacity: .2; } }
+.conteudo-inicial, .mensagem { width: 100%; max-width: 600px; text-align: center; }
+.coracao-pequeno { color: var(--rosa); font-size: 65px; text-shadow: 0 0 25px var(--rosa); animation: pulsarIcone 2s ease-in-out infinite alternate; }
+@keyframes pulsarIcone { from { text-shadow: 0 0 8px var(--rosa); } to { text-shadow: 0 0 30px var(--rosa); } }
+.subtitulo { color: var(--rosa-claro); font-size: 11px; letter-spacing: 4px; line-height: 1.8; text-align: center; }
+h1 { margin: 20px 0; color: white; font-size: clamp(35px, 8vw, 58px); line-height: 1.15; text-shadow: 0 0 25px rgba(255, 79, 163, .2); }
+.descricao { margin: 20px 0 35px; color: #c9b6c1; font-size: 15px; line-height: 1.8; }
+.botao {
+  position: relative; z-index: 2; padding: 15px 27px; border: 1px solid var(--rosa);
+  border-radius: 50px; background: rgba(255, 79, 163, .1); color: #ffb4d9;
+  font-size: 14px; cursor: pointer; box-shadow: 0 0 20px rgba(255, 79, 163, .12);
+  transition: background .3s, box-shadow .3s, transform .3s;
+}
+.botao:hover { background: var(--rosa); color: white; box-shadow: 0 0 30px rgba(255, 79, 163, .45); transform: translateY(-2px); }
+.botao:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+
+/* CORAÇÃO: preenchimento mais uniforme e animação em duas fases */
+#tela-coracao {
+  gap: clamp(10px, 1.7vh, 16px);
+  background: radial-gradient(ellipse at center, rgba(255, 20, 130, .07), transparent 68%), var(--fundo);
+}
+.cabecalho { text-align: center; position: relative; z-index: 1; flex: 0 0 auto; }
+.cabecalho h2 { margin-top: 5px; font-size: clamp(22px, 5vw, 30px); }
+
+#coracao {
+  position: relative;
+  width: min(94vw, 560px, calc((100svh - 230px) * 1.04));
+  aspect-ratio: 1.04 / 1;
+  flex: 0 0 auto;
+  overflow: visible;
+  contain: layout style;
+}
+
+.heart-row {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 2.8%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+.heart-row.poucas-palavras { justify-content: center; }
+
+.palavra {
+  display: inline-block;
+  flex: 0 0 auto;
+  color: #ff79b5;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  backface-visibility: hidden;
+  /* Um brilho estático é bem mais leve que filtros animados em centenas de frases. */
+  text-shadow: 0 0 4px rgba(255, 46, 128, .82), 0 0 7px rgba(255, 45, 135, .32);
+  transform: translate3d(0, 0, 0);
+}
+.palavra.montando { will-change: transform, opacity; }
+.palavra.pronta { opacity: 1; }
+/* Evita animar a opacidade de cada frase indefinidamente depois da montagem. */
+#coracao.completo { filter: none; }
+
+.frase-final { color: var(--rosa-claro); text-align: center; font-size: 13px; line-height: 1.6; }
+.mensagem { padding: 20px 0; }
+.mensagem p:not(.subtitulo):not(.assinatura) { margin: 20px 0; color: #e6cbd9; font-size: 16px; line-height: 1.9; }
+.assinatura { margin-top: 30px; color: var(--rosa-claro); font-style: italic; line-height: 1.8; }
+
+@media (max-width: 480px) {
+  .tela { padding: 18px 10px; gap: 12px; }
+  #coracao { width: min(94vw, 430px, calc((100svh - 230px) * 1.04)); aspect-ratio: 1.04 / 1; }
+  .subtitulo { letter-spacing: 2px; }
+  .heart-row { height: 2.8%; }
+}
+@media (max-height: 820px) and (min-width: 481px) {
+  .tela { padding-top: 12px; padding-bottom: 12px; gap: 9px; }
+  #coracao { width: min(94vw, 560px, calc((100svh - 205px) * 1.04)); aspect-ratio: 1.04 / 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+}
